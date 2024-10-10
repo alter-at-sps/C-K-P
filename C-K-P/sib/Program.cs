@@ -7,6 +7,8 @@
         static List<bool> revealed;
         static HashSet<char> used_chars;
 
+        static int tries_remaining;
+
         static void Main(string[] args)
         {
             Console.WriteLine("Hello, sibeNIC! (press esc to exit)\n");
@@ -17,10 +19,7 @@
             {
                 // print word
 
-                for (int i = 0; i < current_word.Length; i++)
-                {
-                    Console.Write(revealed[i] ? current_word[i] : '_'); Console.Write(' ');
-                }
+                DrawWorld();
 
                 // check for win
 
@@ -59,7 +58,22 @@
                     Console.WriteLine("\n Yep!\n");
                 } else
                 {
-                    Console.WriteLine("\n Nope!\n");
+                    tries_remaining--;
+                    Console.WriteLine($"\n Nope! {tries_remaining} tries remaining...\n");
+                }
+
+                if (tries_remaining == 0)
+                {
+                    for (int i = 0; i < revealed.Count; i++)
+                    {
+                        revealed[i] = true;
+                    }
+
+                    Console.WriteLine("You failed! Here's the full word(s)\n");
+                    DrawWorld(); Console.WriteLine("\n\n");
+
+                    SelectNewWord();
+                    continue;
                 }
             }
         }
@@ -77,6 +91,16 @@
             for (int i = 0; i < current_word.Length; i++)
             {
                 revealed.Add(current_word[i] == ' '); // hide all but auto-reveal whitespaces
+            }
+
+            tries_remaining = 15;
+        }
+
+        static void DrawWorld()
+        {
+            for (int i = 0; i < current_word.Length; i++)
+            {
+                Console.Write(revealed[i] ? current_word[i] : '_'); Console.Write(' ');
             }
         }
     }
